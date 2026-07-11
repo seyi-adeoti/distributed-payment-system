@@ -1,14 +1,14 @@
 package com.example.payment.repository;
 
-import java.util.Optional;
+
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.payment.entity.Payment;
 
-public interface PaymentRepository extends JpaRepository<Payment, UUID> {
+import com.example.common.event.PaymentInitiatedEvent;
+
+public interface PaymentRepository extends JpaRepository<PaymentInitiatedEvent, UUID> {
     boolean existsByReference(String reference);
-    Optional<Payment> findByReference(String reference);
+  
 }
-    
