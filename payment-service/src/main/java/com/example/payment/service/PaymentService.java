@@ -6,7 +6,6 @@ import com.example.payment.dto.PaymentResponse;
 import com.example.payment.entity.OutboxEvent;
 import com.example.payment.entity.Payment;
 import com.example.payment.enum.OutboxStatus;
-import com.example.payment.enum.PaymentStatus;
 import com.example.payment.repository.OutboxRepository;
 import com.example.payment.repository.PaymentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +29,7 @@ public class PaymentService {
     private final ObjectMapper objectMapper;
 
     @Transactional  // THIS IS THE KEY — both writes in one transaction
-    public PaymentResponse initiatePayment(InitiatePaymentRequest request) {
+    public PaymentResponse initiatePayment(PaymentInitiatedEvent request) {
 
         // Idempotency check
         if (paymentRepository.existsByReference(request.getReference())) {
