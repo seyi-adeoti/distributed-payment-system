@@ -1,3 +1,15 @@
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/repository/ProcessedEventRepository.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/repository/WalletTransactionRepository.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/repository/OutboxRepository.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/WalletController.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/entity/OutboxEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/WalletServiceApplication.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/service/WalletService.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/entity/ProcessedEvent.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/entity/OutboxStatus.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/config/KafkaTopicConfig.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/consumer/PaymentEventConsumer.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/repository/WalletRepository.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/entity/WalletTransaction.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/service/OutboxService.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/entity/Wallet.java
