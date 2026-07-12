@@ -22,5 +22,6 @@ public class PaymentResponse {
     private String currency;
     private String reference;
     private String narration;
+    private String status;
     private LocalDateTime occurredAt;
 }

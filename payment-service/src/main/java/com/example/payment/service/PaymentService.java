@@ -1,7 +1,10 @@
 package com.example.payment.service;
 
+import com.example.common.event.PaymentCompletedEvent;
+import com.example.common.event.PaymentFailedEvent;
 import com.example.common.event.PaymentInitiatedEvent;
-
+import com.example.common.exception.DuplicateResourceException;
+import com.example.common.exception.ResourceNotFoundException;
 import com.example.payment.entity.OutboxEvent;
 import com.example.payment.entity.OutboxStatus;
 import com.example.payment.entity.Payment;
@@ -32,13 +35,12 @@ public class PaymentService {
     @Transactional  // THIS IS THE KEY — both writes in one transaction
     public PaymentResponse initiatePayment(PaymentInitiatedEvent request) {
 
-      
-
         // Idempotency check
         if (paymentRepository.existsByReference(request.getReference())) {
-            return mapToResponse(
-                paymentRepository.findByReference(request.getReference()).get()
-            );
+            Payment existing = paymentRepository.findByReference(request.getReference())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Payment", "reference", request.getReference()));
+            return mapToResponse(existing);
         }
 
         // 1. Create payment record
@@ -46,7 +48,7 @@ public class PaymentService {
                 .senderWalletId(request.getSenderWalletId())
                 .receiverWalletId(request.getReceiverWalletId())
                 .amount(request.getAmount())
-                .currency("NGN")
+                .currency(request.getCurrency() != null ? request.getCurrency() : "NGN")
                 .reference(request.getReference())
                 .narration(request.getNarration())
                 .status(PaymentStatus.INITIATED)
@@ -58,7 +60,7 @@ public class PaymentService {
         // If DB commit fails, BOTH the payment and the outbox row roll back
         // If DB commit succeeds, BOTH exist — the event cannot be lost
         PaymentInitiatedEvent event = PaymentInitiatedEvent.builder()
-                .paymentId(payment.getId())
+                .paymentId(payment.getPaymentId())
                 .senderWalletId(payment.getSenderWalletId())
                 .receiverWalletId(payment.getReceiverWalletId())
                 .amount(payment.getAmount())
@@ -69,7 +71,7 @@ public class PaymentService {
                 .build();
 
         OutboxEvent outbox = OutboxEvent.builder()
-                .aggregateId(payment.getId())
+                .aggregateId(payment.getPaymentId())
                 .aggregateType("Payment")
                 .eventType("PaymentInitiated")
                 .payload(toJson(event))
@@ -87,7 +89,8 @@ public class PaymentService {
     // Called by Saga when downstream confirms success
     @Transactional
     public void markCompleted(UUID paymentId) {
-        Payment payment = paymentRepository.findById(paymentId).orElseThrow();
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment", "id", paymentId));
         payment.setStatus(PaymentStatus.COMPLETED);
         payment.setCompletedAt(LocalDateTime.now());
         paymentRepository.save(payment);
@@ -106,7 +109,8 @@ public class PaymentService {
 
     @Transactional
     public void markFailed(UUID paymentId, String reason) {
-        Payment payment = paymentRepository.findById(paymentId).orElseThrow();
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment", "id", paymentId));
         payment.setStatus(PaymentStatus.FAILED);
         payment.setFailureReason(reason);
         paymentRepository.save(payment);
@@ -130,7 +134,22 @@ public class PaymentService {
                 .eventType(eventType)
                 .payload(toJson(event))
                 .status(OutboxStatus.PENDING)
+                .retryCount(0)
                 .build());
+    }
+
+    private PaymentResponse mapToResponse(Payment payment) {
+        return PaymentResponse.builder()
+                .paymentId(payment.getPaymentId())
+                .senderWalletId(payment.getSenderWalletId())
+                .receiverWalletId(payment.getReceiverWalletId())
+                .amount(payment.getAmount())
+                .currency(payment.getCurrency())
+                .reference(payment.getReference())
+                .narration(payment.getNarration())
+                .status(payment.getStatus().name())
+                .occurredAt(payment.getOccurredAt())
+                .build();
     }
 
     private String toJson(Object obj) {
