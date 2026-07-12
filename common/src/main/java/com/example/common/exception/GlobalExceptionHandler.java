@@ -1,7 +1,8 @@
 package com.example.common.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,8 +20,9 @@ import java.util.List;
  * regardless of which microservice threw the exception.
  */
 @RestControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     // ── Validation errors (e.g., @Valid on request body) ─────────────────
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -31,21 +33,20 @@ public class GlobalExceptionHandler {
         List<ApiErrorResponse.FieldError> fieldErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(fe -> ApiErrorResponse.FieldError.builder()
-                        .field(fe.getField())
-                        .message(fe.getDefaultMessage())
-                        .rejectedValue(fe.getRejectedValue())
-                        .build())
+                .map(fe -> new ApiErrorResponse.FieldError(
+                        fe.getField(),
+                        fe.getDefaultMessage(),
+                        fe.getRejectedValue()))
                 .toList();
 
-        ApiErrorResponse body = ApiErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Failed")
-                .message("One or more fields are invalid")
-                .path(request.getRequestURI())
-                .errors(fieldErrors)
-                .build();
+        ApiErrorResponse body = new ApiErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation Failed",
+                "One or more fields are invalid",
+                request.getRequestURI(),
+                fieldErrors
+        );
 
         log.warn("Validation failed on {}: {}", request.getRequestURI(), fieldErrors);
         return ResponseEntity.badRequest().body(body);
@@ -57,13 +58,14 @@ public class GlobalExceptionHandler {
             ServiceException ex,
             HttpServletRequest request) {
 
-        ApiErrorResponse body = ApiErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(ex.getStatus().value())
-                .error(ex.getStatus().getReasonPhrase())
-                .message(ex.getMessage())
-                .path(request.getRequestURI())
-                .build();
+        ApiErrorResponse body = new ApiErrorResponse(
+                LocalDateTime.now(),
+                ex.getStatus().value(),
+                ex.getStatus().getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI(),
+                null
+        );
 
         log.warn("Service error on {}: {} ({})",
                 request.getRequestURI(), ex.getMessage(), ex.getStatus());
@@ -76,13 +78,14 @@ public class GlobalExceptionHandler {
             IllegalArgumentException ex,
             HttpServletRequest request) {
 
-        ApiErrorResponse body = ApiErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error("Bad Request")
-                .message(ex.getMessage())
-                .path(request.getRequestURI())
-                .build();
+        ApiErrorResponse body = new ApiErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                ex.getMessage(),
+                request.getRequestURI(),
+                null
+        );
 
         log.warn("Bad request on {}: {}", request.getRequestURI(), ex.getMessage());
         return ResponseEntity.badRequest().body(body);
@@ -94,13 +97,14 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request) {
 
-        ApiErrorResponse body = ApiErrorResponse.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Internal Server Error")
-                .message("An unexpected error occurred")
-                .path(request.getRequestURI())
-                .build();
+        ApiErrorResponse body = new ApiErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                "An unexpected error occurred",
+                request.getRequestURI(),
+                null
+        );
 
         log.error("Unhandled exception on {}", request.getRequestURI(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
