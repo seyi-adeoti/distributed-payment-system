@@ -31,7 +31,7 @@ import java.util.UUID;
 public class OutboxEvent {
     
     @Id @GeneratedValue
-    private UUID id;
+    private Long id;
 
     private UUID aggregateId;       // e.g. paymentId
     private String aggregateType;   // e.g. "Payment"

@@ -41,7 +41,7 @@ public class Payment {
     private String currency;
 
     @Column(nullable = false)
-    private String status;
+    private PaymentStatus  status;
     
     @Column(nullable = false, unique = true)
     private String reference;

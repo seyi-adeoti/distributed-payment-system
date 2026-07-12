@@ -32,7 +32,7 @@ public class PaymentService {
     @Transactional  // THIS IS THE KEY — both writes in one transaction
     public PaymentResponse initiatePayment(PaymentInitiatedEvent request) {
 
-        // log.info(request);
+      
 
         // Idempotency check
         if (paymentRepository.existsByReference(request.getReference())) {
