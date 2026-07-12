@@ -1,5 +1,5 @@
 package com.example.payment.entity;
 
 public enum PaymentStatus {
-    INITIATED,COMPLETED
+    INITIATED, COMPLETED, FAILED
 }
