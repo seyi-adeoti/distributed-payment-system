@@ -9,6 +9,7 @@
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/entity/OutboxStatus.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/config/KafkaTopicConfig.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/consumer/PaymentEventConsumer.java
+/Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/saga/WalletSagaParticipant.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/repository/WalletRepository.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/entity/WalletTransaction.java
 /Users/macbook/Desktop/distributed-payment-platform/wallet-service/src/main/java/com/example/wallet/service/OutboxService.java
