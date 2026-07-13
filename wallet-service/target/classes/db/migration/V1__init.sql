@@ -37,3 +37,8 @@ CREATE TABLE outbox_events (
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     published_at   TIMESTAMP
 );
+
+-- Insert Dummy Data for Testing
+INSERT INTO wallets (wallet_id, user_id, balance, currency, status) VALUES 
+('11111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 50000.00, 'NGN', 'ACTIVE'),
+('22222222-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 10000.00, 'NGN', 'ACTIVE');
