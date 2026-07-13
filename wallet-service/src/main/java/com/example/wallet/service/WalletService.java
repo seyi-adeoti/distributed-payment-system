@@ -90,4 +90,34 @@ public class WalletService {
 
         log.info("Reversed debit of {} for wallet {}. Ref: {}", amount, walletId, reference);
     }
+    
+    @Transactional
+    public void debitForReversal(UUID walletId, BigDecimal amount, String reference, String narration) {
+
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+
+        if (wallet.getBalance().compareTo(amount) < 0) {
+            throw new InsufficientFundsException(walletId.toString(), amount.toPlainString());
+        }
+
+        wallet.setBalance(wallet.getBalance().subtract(amount));
+        walletRepository.save(wallet);
+
+        transactionRepository.save(WalletTransaction.builder()
+                .walletId(walletId)
+                .type(TransactionType.DEBIT)
+                .amount(amount)
+                .reference(reference)
+                .narration(narration)
+                .build());
+
+        log.info("Debited {} from wallet {} for reversal. Ref: {}", amount, walletId, reference);
+    }
+    
+    public BigDecimal getBalance(UUID walletId) {
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+        return wallet.getBalance();
+    }
 }

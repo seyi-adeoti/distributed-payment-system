@@ -16,6 +16,7 @@ import java.util.UUID;
 public class DebitReversalRequestedEvent {
     private UUID paymentId;
     private UUID senderWalletId;
+    private UUID receiverWalletId;
     private BigDecimal amount;
     private String originalReference;
     private String reversalReference;
