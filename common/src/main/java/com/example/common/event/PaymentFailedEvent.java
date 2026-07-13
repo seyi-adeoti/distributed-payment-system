@@ -16,5 +16,6 @@ public class PaymentFailedEvent {
     private UUID paymentId;
     private String reference;
     private String reason;
+    private boolean compensationRequired;
     private LocalDateTime occurredAt;
 }

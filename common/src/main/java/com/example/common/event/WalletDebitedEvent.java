@@ -19,5 +19,7 @@ public class WalletDebitedEvent {
     private UUID receiverWalletId;
     private BigDecimal amount;
     private String reference;
+    private BigDecimal senderBalanceAfter;
+    private BigDecimal receiverBalanceAfter;
     private LocalDateTime occurredAt;
 }
