@@ -151,6 +151,8 @@ public class PaymentSagaOrchestrator {
             PaymentCompletedEvent.builder()
                 .paymentId(event.getPaymentId())
                 .reference(event.getReference())
+                .senderWalletId(payment.getSenderWalletId())
+                .receiverWalletId(payment.getReceiverWalletId())
                 .amount(event.getAmount())
                 .occurredAt(LocalDateTime.now())
                 .build()
