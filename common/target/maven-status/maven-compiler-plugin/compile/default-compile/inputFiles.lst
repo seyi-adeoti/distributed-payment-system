@@ -1,10 +1,12 @@
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/exception/ApiErrorResponse.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/PaymentCompletedEvent.java
+/Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/UserCreatedEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/PaymentReversedEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/LedgerPostRequestedEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/PaymentFailedEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/WalletDebitFailedEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/exception/InsufficientFundsException.java
+/Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/UserUpgradedEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/exception/ServiceException.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/PaymentInitiatedEvent.java
 /Users/macbook/Desktop/distributed-payment-platform/common/src/main/java/com/example/common/event/LedgerPostedEvent.java

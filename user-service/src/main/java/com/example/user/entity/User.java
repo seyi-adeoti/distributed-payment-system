@@ -63,5 +63,7 @@ public class User {
     private String resetToken;
     private LocalDateTime resetTokenExpiry;
 
-
+    @Column(name = "kyc_tier")
+    @Builder.Default
+    private String kycTier = "TIER_0";
 }

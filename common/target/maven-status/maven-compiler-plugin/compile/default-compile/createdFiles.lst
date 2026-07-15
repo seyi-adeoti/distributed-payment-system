@@ -6,6 +6,7 @@ com/example/common/exception/WalletInactiveException.class
 com/example/common/event/WalletDebitedEvent.class
 com/example/common/event/LedgerPostRequestedEvent$LedgerPostRequestedEventBuilder.class
 com/example/common/event/PaymentCompletedEvent$PaymentCompletedEventBuilder.class
+com/example/common/event/UserUpgradedEvent$UserUpgradedEventBuilder.class
 com/example/common/event/LedgerPostRequestedEvent.class
 com/example/common/event/DebitReversedEvent$DebitReversedEventBuilder.class
 com/example/common/exception/ApiErrorResponse$FieldError.class
@@ -14,11 +15,13 @@ com/example/common/event/DebitReversalRequestedEvent$DebitReversalRequestedEvent
 com/example/common/exception/GlobalExceptionHandler.class
 com/example/common/config/KafkaConfig$1.class
 com/example/common/event/DebitReversedEvent.class
+com/example/common/event/UserCreatedEvent$UserCreatedEventBuilder.class
 com/example/common/KafkaTopics.class
 com/example/common/event/WalletDebitFailedEvent$WalletDebitFailedEventBuilder.class
 com/example/common/event/WalletDebitedEvent$WalletDebitedEventBuilder.class
 com/example/common/event/LedgerPostedEvent$LedgerPostedEventBuilder.class
 com/example/common/event/LedgerPostFailedEvent.class
+com/example/common/event/UserCreatedEvent.class
 com/example/common/event/PaymentFailedEvent.class
 com/example/common/event/PaymentInitiatedEvent.class
 com/example/common/event/PaymentCompletedEvent.class
@@ -27,6 +30,7 @@ com/example/common/event/LedgerPostedEvent.class
 com/example/common/exception/ServiceException.class
 com/example/common/exception/InsufficientFundsException.class
 com/example/common/exception/DuplicateResourceException.class
+com/example/common/event/UserUpgradedEvent.class
 com/example/common/config/KafkaConfig.class
 com/example/common/exception/KycLimitExceededException.class
 com/example/common/event/WalletDebitFailedEvent.class
