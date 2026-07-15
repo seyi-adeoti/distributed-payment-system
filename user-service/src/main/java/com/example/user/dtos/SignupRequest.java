@@ -3,5 +3,20 @@ package com.example.user.dtos;
 import java.time.LocalDateTime;
 
 // 1. Authentication Requests
-public record SignupRequest(String firstName, String lastName, String userName, String email, String password, LocalDateTime dob) {}
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SignupRequest {
+    private String firstName;
+    private String lastName;
+    private String userName;
+    private String email;
+    private String password;
+    private LocalDateTime dob;
+}

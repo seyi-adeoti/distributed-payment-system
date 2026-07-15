@@ -1,4 +1,14 @@
 package com.example.user.dtos;
 
-public record RefreshTokenRequest(String refreshToken) {}
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RefreshTokenRequest {
+    private String refreshToken;
+}

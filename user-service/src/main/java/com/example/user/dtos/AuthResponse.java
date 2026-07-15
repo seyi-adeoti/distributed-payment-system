@@ -1,4 +1,16 @@
 package com.example.user.dtos;
 
-public record AuthResponse(String accessToken, String refreshToken, boolean requires2FA) {}
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class AuthResponse {
+    private String accessToken;
+    private String refreshToken;
+    private boolean requires2FA;
+}

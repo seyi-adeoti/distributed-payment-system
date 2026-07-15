@@ -1,8 +1,17 @@
 package com.example.user.dtos;
 
-public record UpdateUserRequest(
-        String firstName,
-        String lastName,
-        String email,
-        String role
-) {}
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateUserRequest {
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String role;
+}

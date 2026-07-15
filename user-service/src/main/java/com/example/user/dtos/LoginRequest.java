@@ -1,3 +1,16 @@
 package com.example.user.dtos;
 
-public record LoginRequest(String userName, String password, String code) {} // 'code' is for 2FA
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class LoginRequest {
+    private String userName;
+    private String password;
+    private String code;
+}

@@ -2,5 +2,20 @@ package com.example.user.dtos;
 
 import java.time.LocalDateTime;
 
-public record CreateUserRequest(String firstName, String lastName, String userName, String email, String role, LocalDateTime dob) {}
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CreateUserRequest {
+    private String firstName;
+    private String lastName;
+    private String userName;
+    private String email;
+    private String role;
+    private LocalDateTime dob;
+}
