@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .role(request.getRole())
                 .dob(request.getDob())
-                .password(passwordEncoder.encode("DefaultPassword123!")) // Send temporary password
+                .password(passwordEncoder.encode("DefaultPassword123!")) 
                 .isEnabled(true)
                 .isUsing2FA(false)
                 .build();

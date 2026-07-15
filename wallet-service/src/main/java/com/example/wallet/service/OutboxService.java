@@ -25,7 +25,7 @@ public class OutboxService {
     private final ObjectMapper objectMapper;
 
     public void write(UUID aggregateId, String aggregateType,
-                      String eventType, Object event) {
+            String eventType, Object event) {
 
         OutboxEvent outbox = OutboxEvent.builder()
                 .aggregateId(aggregateId)

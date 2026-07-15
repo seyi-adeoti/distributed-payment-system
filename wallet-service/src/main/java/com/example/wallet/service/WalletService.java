@@ -22,111 +22,112 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WalletService {
 
-    private final WalletRepository walletRepository;
-    private final WalletTransactionRepository transactionRepository;
-    private final com.example.wallet.service.implementation.AmlValidator amlValidator;
+        private final WalletRepository walletRepository;
+        private final WalletTransactionRepository transactionRepository;
+        private final com.example.wallet.service.implementation.AmlValidator amlValidator;
 
-    @Transactional
-    public void debitForPayment(UUID walletId, BigDecimal amount,
-                                 String reference, String narration) {
+        @Transactional
+        public void debitForPayment(UUID walletId, BigDecimal amount,
+                        String reference, String narration) {
 
-        Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+                Wallet wallet = walletRepository.findById(walletId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
 
-        if (!"TIER_1".equals(wallet.getKycTier())) {
-            throw new com.example.common.exception.KycLimitExceededException("Wallet " + walletId + " is not TIER_1. KYC upgrade required.");
+                if (!"TIER_1".equals(wallet.getKycTier())) {
+                        throw new com.example.common.exception.KycLimitExceededException(
+                                        "Wallet " + walletId + " is not TIER_1. KYC upgrade required.");
+                }
+
+                if (!amlValidator.isTransactionClean(amount)) {
+                        throw new RuntimeException("Transaction flagged by AML. Limit exceeded.");
+                }
+
+                if (wallet.getBalance().compareTo(amount) < 0) {
+                        throw new InsufficientFundsException(walletId.toString(), amount.toPlainString());
+                }
+
+                wallet.setBalance(wallet.getBalance().subtract(amount));
+                walletRepository.save(wallet);
+
+                transactionRepository.save(WalletTransaction.builder()
+                                .walletId(walletId)
+                                .type(TransactionType.DEBIT)
+                                .amount(amount)
+                                .reference(reference)
+                                .narration(narration)
+                                .build());
+
+                log.info("Debited {} from wallet {}. Ref: {}", amount, walletId, reference);
         }
 
-        if (!amlValidator.isTransactionClean(amount)) {
-            throw new RuntimeException("Transaction flagged by AML. Limit exceeded.");
+        @Transactional
+        public void creditForPayment(UUID walletId, BigDecimal amount,
+                        String reference, String narration) {
+
+                Wallet wallet = walletRepository.findById(walletId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+
+                wallet.setBalance(wallet.getBalance().add(amount));
+                walletRepository.save(wallet);
+
+                transactionRepository.save(WalletTransaction.builder()
+                                .walletId(walletId)
+                                .type(TransactionType.CREDIT)
+                                .amount(amount)
+                                .reference(reference)
+                                .narration(narration)
+                                .build());
+
+                log.info("Credited {} to wallet {}. Ref: {}", amount, walletId, reference);
         }
 
-        if (wallet.getBalance().compareTo(amount) < 0) {
-            throw new InsufficientFundsException(walletId.toString(), amount.toPlainString());
+        @Transactional
+        public void reverseDebit(UUID walletId, BigDecimal amount, String reference) {
+
+                Wallet wallet = walletRepository.findById(walletId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+
+                wallet.setBalance(wallet.getBalance().add(amount));
+                walletRepository.save(wallet);
+
+                transactionRepository.save(WalletTransaction.builder()
+                                .walletId(walletId)
+                                .type(TransactionType.REVERSAL)
+                                .amount(amount)
+                                .reference(reference + "-REV")
+                                .narration("Reversal of " + reference)
+                                .build());
+
+                log.info("Reversed debit of {} for wallet {}. Ref: {}", amount, walletId, reference);
         }
 
-        wallet.setBalance(wallet.getBalance().subtract(amount));
-        walletRepository.save(wallet);
+        @Transactional
+        public void debitForReversal(UUID walletId, BigDecimal amount, String reference, String narration) {
 
-        transactionRepository.save(WalletTransaction.builder()
-                .walletId(walletId)
-                .type(TransactionType.DEBIT)
-                .amount(amount)
-                .reference(reference)
-                .narration(narration)
-                .build());
+                Wallet wallet = walletRepository.findById(walletId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
 
-        log.info("Debited {} from wallet {}. Ref: {}", amount, walletId, reference);
-    }
+                if (wallet.getBalance().compareTo(amount) < 0) {
+                        throw new InsufficientFundsException(walletId.toString(), amount.toPlainString());
+                }
 
-    @Transactional
-    public void creditForPayment(UUID walletId, BigDecimal amount,
-                                  String reference, String narration) {
+                wallet.setBalance(wallet.getBalance().subtract(amount));
+                walletRepository.save(wallet);
 
-        Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+                transactionRepository.save(WalletTransaction.builder()
+                                .walletId(walletId)
+                                .type(TransactionType.DEBIT)
+                                .amount(amount)
+                                .reference(reference)
+                                .narration(narration)
+                                .build());
 
-        wallet.setBalance(wallet.getBalance().add(amount));
-        walletRepository.save(wallet);
-
-        transactionRepository.save(WalletTransaction.builder()
-                .walletId(walletId)
-                .type(TransactionType.CREDIT)
-                .amount(amount)
-                .reference(reference)
-                .narration(narration)
-                .build());
-
-        log.info("Credited {} to wallet {}. Ref: {}", amount, walletId, reference);
-    }
-
-    @Transactional
-    public void reverseDebit(UUID walletId, BigDecimal amount, String reference) {
-
-        Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
-
-        wallet.setBalance(wallet.getBalance().add(amount));
-        walletRepository.save(wallet);
-
-        transactionRepository.save(WalletTransaction.builder()
-                .walletId(walletId)
-                .type(TransactionType.REVERSAL)
-                .amount(amount)
-                .reference(reference + "-REV")
-                .narration("Reversal of " + reference)
-                .build());
-
-        log.info("Reversed debit of {} for wallet {}. Ref: {}", amount, walletId, reference);
-    }
-    
-    @Transactional
-    public void debitForReversal(UUID walletId, BigDecimal amount, String reference, String narration) {
-
-        Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
-
-        if (wallet.getBalance().compareTo(amount) < 0) {
-            throw new InsufficientFundsException(walletId.toString(), amount.toPlainString());
+                log.info("Debited {} from wallet {} for reversal. Ref: {}", amount, walletId, reference);
         }
 
-        wallet.setBalance(wallet.getBalance().subtract(amount));
-        walletRepository.save(wallet);
-
-        transactionRepository.save(WalletTransaction.builder()
-                .walletId(walletId)
-                .type(TransactionType.DEBIT)
-                .amount(amount)
-                .reference(reference)
-                .narration(narration)
-                .build());
-
-        log.info("Debited {} from wallet {} for reversal. Ref: {}", amount, walletId, reference);
-    }
-    
-    public BigDecimal getBalance(UUID walletId) {
-        Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
-        return wallet.getBalance();
-    }
+        public BigDecimal getBalance(UUID walletId) {
+                Wallet wallet = walletRepository.findById(walletId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+                return wallet.getBalance();
+        }
 }

@@ -45,44 +45,41 @@ public class WalletSagaParticipant {
         try {
             // Debit sender
             walletService.debitForPayment(
-                event.getSenderWalletId(),
-                event.getAmount(),
-                event.getReference(),
-                event.getNarration()
-            );
+                    event.getSenderWalletId(),
+                    event.getAmount(),
+                    event.getReference(),
+                    event.getNarration());
 
             // Credit receiver
             walletService.creditForPayment(
-                event.getReceiverWalletId(),
-                event.getAmount(),
-                event.getReference(),
-                event.getNarration()
-            );
+                    event.getReceiverWalletId(),
+                    event.getAmount(),
+                    event.getReference(),
+                    event.getNarration());
 
             // Get updated balances for the event
             BigDecimal senderBalance = walletService
-                .getBalance(event.getSenderWalletId());
+                    .getBalance(event.getSenderWalletId());
             BigDecimal receiverBalance = walletService
-                .getBalance(event.getReceiverWalletId());
+                    .getBalance(event.getReceiverWalletId());
 
             markProcessed(event.getReference(), "PaymentInitiated");
 
             // Publish success
             outboxService.write(
-                event.getPaymentId(),
-                "Wallet",
-                "WalletDebited",
-                WalletDebitedEvent.builder()
-                    .paymentId(event.getPaymentId())
-                    .senderWalletId(event.getSenderWalletId())
-                    .receiverWalletId(event.getReceiverWalletId())
-                    .amount(event.getAmount())
-                    .reference(event.getReference())
-                    .senderBalanceAfter(senderBalance)
-                    .receiverBalanceAfter(receiverBalance)
-                    .occurredAt(LocalDateTime.now())
-                    .build()
-            );
+                    event.getPaymentId(),
+                    "Wallet",
+                    "WalletDebited",
+                    WalletDebitedEvent.builder()
+                            .paymentId(event.getPaymentId())
+                            .senderWalletId(event.getSenderWalletId())
+                            .receiverWalletId(event.getReceiverWalletId())
+                            .amount(event.getAmount())
+                            .reference(event.getReference())
+                            .senderBalanceAfter(senderBalance)
+                            .receiverBalanceAfter(receiverBalance)
+                            .occurredAt(LocalDateTime.now())
+                            .build());
 
             log.info("Wallet debit+credit complete for payment: {}", event.getPaymentId());
 
@@ -109,33 +106,30 @@ public class WalletSagaParticipant {
 
         // Reverse: credit sender (give money back)
         walletService.creditForPayment(
-            event.getSenderWalletId(),
-            event.getAmount(),
-            reversalRef,
-            "Reversal: " + event.getReason()
-        );
+                event.getSenderWalletId(),
+                event.getAmount(),
+                reversalRef,
+                "Reversal: " + event.getReason());
 
         // Reverse: debit receiver (take money back — they never should have had it)
         walletService.debitForReversal(
-            event.getReceiverWalletId(),
-            event.getAmount(),
-            reversalRef + "-RCV",
-            "Reversal: " + event.getReason()
-        );
+                event.getReceiverWalletId(),
+                event.getAmount(),
+                reversalRef + "-RCV",
+                "Reversal: " + event.getReason());
 
         markProcessed(reversalRef, "DebitReversalRequested");
 
         outboxService.write(
-            event.getPaymentId(),
-            "Wallet",
-            "DebitReversed",
-            DebitReversedEvent.builder()
-                .paymentId(event.getPaymentId())
-                .originalReference(event.getOriginalReference())
-                .reversalReference(reversalRef)
-                .occurredAt(LocalDateTime.now())
-                .build()
-        );
+                event.getPaymentId(),
+                "Wallet",
+                "DebitReversed",
+                DebitReversedEvent.builder()
+                        .paymentId(event.getPaymentId())
+                        .originalReference(event.getOriginalReference())
+                        .reversalReference(reversalRef)
+                        .occurredAt(LocalDateTime.now())
+                        .build());
 
         log.info("Debit reversal complete for payment: {}", event.getPaymentId());
     }
@@ -144,19 +138,18 @@ public class WalletSagaParticipant {
         markProcessed(event.getReference(), "PaymentInitiated");
 
         outboxService.write(
-            event.getPaymentId(),
-            "Wallet",
-            "WalletDebitFailed",
-            WalletDebitFailedEvent.builder()
-                .paymentId(event.getPaymentId())
-                .reference(event.getReference())
-                .reason(reason)
-                .occurredAt(LocalDateTime.now())
-                .build()
-        );
+                event.getPaymentId(),
+                "Wallet",
+                "WalletDebitFailed",
+                WalletDebitFailedEvent.builder()
+                        .paymentId(event.getPaymentId())
+                        .reference(event.getReference())
+                        .reason(reason)
+                        .occurredAt(LocalDateTime.now())
+                        .build());
 
         log.warn("Wallet debit failed. Payment: {} Reason: {}",
-            event.getPaymentId(), reason);
+                event.getPaymentId(), reason);
     }
 
     private boolean isAlreadyProcessed(String reference) {
