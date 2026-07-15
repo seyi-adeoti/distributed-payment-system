@@ -12,13 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Global exception handler picked up by any service that component-scans
- * the com.example.common package.
- *
- * Ensures every error response follows the same ApiErrorResponse shape,
- * regardless of which microservice threw the exception.
- */
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
