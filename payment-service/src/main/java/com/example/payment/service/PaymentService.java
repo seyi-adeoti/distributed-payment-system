@@ -100,6 +100,8 @@ public class PaymentService {
             PaymentCompletedEvent.builder()
                 .paymentId(paymentId)
                 .reference(payment.getReference())
+                .senderWalletId(payment.getSenderWalletId())
+                .receiverWalletId(payment.getReceiverWalletId())
                 .amount(payment.getAmount())
                 .occurredAt(LocalDateTime.now())
                 .build());

@@ -1,3 +1,8 @@
+/Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/dto/NotificationType.java
 /Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/config/KafkaTopicConfig.java
 /Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/NotificationController.java
+/Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/dto/NotificationRequest.java
+/Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/consumer/NotificationConsumer.java
+/Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/service/NotificationSender.java
+/Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/client/UserServiceClient.java
 /Users/macbook/Desktop/distributed-payment-platform/notification-service/src/main/java/com/example/notification/NotificationServiceApplication.java

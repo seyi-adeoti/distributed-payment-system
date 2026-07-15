@@ -5,6 +5,7 @@ com/example/wallet/WalletServiceApplication.class
 com/example/wallet/entity/WalletTransaction.class
 com/example/wallet/service/OutboxService.class
 com/example/wallet/entity/WalletTransaction$WalletTransactionBuilder.class
+com/example/wallet/saga/WalletSagaParticipant.class
 com/example/wallet/repository/WalletTransactionRepository.class
 com/example/wallet/entity/WalletTransaction$TransactionType.class
 com/example/wallet/repository/OutboxRepository.class

@@ -16,6 +16,8 @@ import java.util.UUID;
 public class PaymentCompletedEvent {
     private UUID paymentId;
     private String reference;
+    private UUID senderWalletId;
+    private UUID receiverWalletId;
     private BigDecimal amount;
     private LocalDateTime occurredAt;
 }
