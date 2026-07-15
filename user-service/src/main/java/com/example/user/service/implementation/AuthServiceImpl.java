@@ -18,6 +18,12 @@ import java.lang.module.ResolutionException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.common.event.UserCreatedEvent;
+import com.example.user.entity.OutboxEvent;
+import com.example.user.entity.OutboxStatus;
+import com.example.user.repository.OutboxRepository;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -26,6 +32,8 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final TwoFactorAuthService twoFactorAuthService;
+    private final OutboxRepository outboxRepository;
+    private final ObjectMapper objectMapper;
 
 
 
@@ -51,6 +59,27 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         userRepository.save(user);
+
+        // Publish UserCreatedEvent to outbox
+        try {
+            UserCreatedEvent eventPayload = UserCreatedEvent.builder()
+                .userId(user.getId())
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .build();
+                
+            OutboxEvent outboxEvent = OutboxEvent.builder()
+                .aggregateId(user.getId())
+                .aggregateType("User")
+                .eventType("UserCreatedEvent")
+                .payload(objectMapper.writeValueAsString(eventPayload))
+                .status(OutboxStatus.PENDING)
+                .build();
+            outboxRepository.save(outboxEvent);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to write to outbox", e);
+        }
 
         String accessToken = jwtService.generateAccessToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);

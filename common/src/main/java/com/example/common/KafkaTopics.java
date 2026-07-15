@@ -9,6 +9,7 @@ public class KafkaTopics {
     public static final String AML_EVENTS          = "aml.events";
     public static final String NOTIFICATION_EVENTS = "notification.events";
     public static final String COMPENSATION_EVENTS = "compensation.events";
+    public static final String USER_EVENTS         = "user.events";
 
     private KafkaTopics() {
     }
