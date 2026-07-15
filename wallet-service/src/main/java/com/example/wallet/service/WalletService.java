@@ -24,6 +24,7 @@ public class WalletService {
 
     private final WalletRepository walletRepository;
     private final WalletTransactionRepository transactionRepository;
+    private final com.example.wallet.service.implementation.AmlValidator amlValidator;
 
     @Transactional
     public void debitForPayment(UUID walletId, BigDecimal amount,
@@ -31,6 +32,14 @@ public class WalletService {
 
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new ResourceNotFoundException("Wallet", "id", walletId));
+
+        if (!"TIER_1".equals(wallet.getKycTier())) {
+            throw new com.example.common.exception.KycLimitExceededException("Wallet " + walletId + " is not TIER_1. KYC upgrade required.");
+        }
+
+        if (!amlValidator.isTransactionClean(amount)) {
+            throw new RuntimeException("Transaction flagged by AML. Limit exceeded.");
+        }
 
         if (wallet.getBalance().compareTo(amount) < 0) {
             throw new InsufficientFundsException(walletId.toString(), amount.toPlainString());
