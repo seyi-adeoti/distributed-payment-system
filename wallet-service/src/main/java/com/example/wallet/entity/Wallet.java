@@ -38,4 +38,8 @@ public class Wallet {
 
     @Version
     private Long version;  // Optimistic locking for concurrent debit/credit
+
+    @Column(name = "kyc_tier")
+    @Builder.Default
+    private String kycTier = "TIER_0";
 }
