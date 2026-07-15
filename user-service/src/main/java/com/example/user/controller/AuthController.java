@@ -28,17 +28,17 @@ public class AuthController {
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        return ResponseEntity.ok(authService.refreshToken(request.refreshToken()));
+        return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
     }
 
     @PostMapping("/forgot-password")
     public ResponseEntity<MessageResponse> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        authService.forgotPassword(request.email());
+        authService.forgotPassword(request.getEmail());
         return ResponseEntity.ok(new MessageResponse("Password reset link sent to email."));
     }
 
     @PostMapping("/verify-2fa")
     public ResponseEntity<AuthResponse> verify2FA(@RequestBody Verify2FARequest request) {
-        return ResponseEntity.ok(authService.verify2FA(request.userName(), request.code()));
+        return ResponseEntity.ok(authService.verify2FA(request.getUserName(), request.getCode()));
     }
 }

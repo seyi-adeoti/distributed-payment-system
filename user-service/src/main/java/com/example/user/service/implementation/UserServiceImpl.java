@@ -24,12 +24,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(CreateUserRequest request) {
         User user = User.builder()
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .userName(request.userName())
-                .email(request.email())
-                .role(request.role())
-                .dob(request.dob())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .userName(request.getUserName())
+                .email(request.getEmail())
+                .role(request.getRole())
+                .dob(request.getDob())
                 .password(passwordEncoder.encode("DefaultPassword123!")) // Send temporary password
                 .isEnabled(true)
                 .isUsing2FA(false)
@@ -56,15 +56,15 @@ public class UserServiceImpl implements UserService {
     public User updateUser(UUID id, UpdateUserRequest request) {
         User user = getUserById(id);
 
-        if (request.firstName() != null) user.setFirstName(request.firstName());
-        if (request.lastName() != null) user.setLastName(request.lastName());
-        if (request.email() != null) {
-            if (userRepository.existsByEmail(request.email()) && !user.getEmail().equals(request.email())) {
+        if (request.getFirstName() != null) user.setFirstName(request.getFirstName());
+        if (request.getLastName() != null) user.setLastName(request.getLastName());
+        if (request.getEmail() != null) {
+            if (userRepository.existsByEmail(request.getEmail()) && !user.getEmail().equals(request.getEmail())) {
                 throw new RuntimeException("Email already in use");
             }
-            user.setEmail(request.email());
+            user.setEmail(request.getEmail());
         }
-        if (request.role() != null) user.setRole(request.role());
+        if (request.getRole() != null) user.setRole(request.getRole());
 
         return userRepository.save(user);
     }

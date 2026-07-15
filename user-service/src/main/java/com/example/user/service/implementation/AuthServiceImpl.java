@@ -31,20 +31,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse signup(SignupRequest request) {
-        if (userRepository.existsByUserName(request.userName())) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new DuplicateResourceException("Username already exists");
         }
-        if (userRepository.existsByEmail(request.email())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new DuplicateResourceException("Email already exists");
         }
 
         User user = User.builder()
-                .firstName(request.firstName())
-                .lastName(request.lastName())
-                .userName(request.userName())
-                .email(request.email())
-                .dob(request.dob())
-                .password(passwordEncoder.encode(request.password()))
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .userName(request.getUserName())
+                .email(request.getEmail())
+                .dob(request.getDob())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .role("USER") // Default role
                 .isEnabled(true)
                 .isUsing2FA(false)
@@ -60,11 +60,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        User user = userRepository.findByUserName(request.userName())
+        User user = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
 
         //Verify Password
-        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid username or password");
         }
 
@@ -147,14 +147,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void resetPassword(ResetPasswordRequest request) {
-        User user = userRepository.findByResetToken(request.token())
+        User user = userRepository.findByResetToken(request.getToken())
                 .orElseThrow(() -> new RuntimeException("Invalid or expired reset token"));
 
         if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Reset token has expired. Please request a new one.");
         }
 
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         user.setResetToken(null);
         user.setResetTokenExpiry(null);
 
