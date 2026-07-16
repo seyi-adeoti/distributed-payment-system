@@ -16,9 +16,11 @@ public class NotificationSender {
     private final UserServiceClient userServiceClient;
 
     public void send(NotificationRequest request) {
-        String recipient = request.getWalletId() != null 
-            ? userServiceClient.getUserEmail(request.getWalletId()) 
-            : "unknown (payment: " + request.getPaymentId() + ")";
+        String recipient = request.getEmail() != null 
+            ? request.getEmail() 
+            : (request.getWalletId() != null 
+                ? userServiceClient.getUserEmail(request.getWalletId()) 
+                : "unknown (payment: " + request.getPaymentId() + ")");
             
         System.out.println();
         System.out.println("===============================================================");
