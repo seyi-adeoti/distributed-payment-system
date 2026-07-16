@@ -46,8 +46,7 @@ public class NotificationConsumer {
                         record.value(), UserCreatedEvent.class);
                         
                     notificationSender.send(NotificationRequest.builder()
-                        // Since we have the email, we might want to pass it through NotificationRequest. Let's see if we can.
-                        .walletId(event.getUserId()) // Using userId here just to have something unique, though it's not a wallet.
+                        .email(event.getEmail())
                         .type(NotificationType.SECURITY_ALERT)
                         .title("Welcome to Distributed Payment Platform!")
                         .message(String.format("Hi %s, your account has been successfully created. Please upgrade your KYC to start transacting.", event.getFirstName()))
