@@ -20,10 +20,16 @@ public class NotificationSender {
             ? userServiceClient.getUserEmail(request.getWalletId()) 
             : "unknown (payment: " + request.getPaymentId() + ")";
             
-        log.info(">>> SENDING NOTIFICATION to {} <<<", recipient);
-        log.info("Title: {}", request.getTitle());
-        log.info("Message: {}", request.getMessage());
-        log.info("Type: {}", request.getType());
-        log.info("------------------------------------------------");
+        System.out.println();
+        System.out.println("===============================================================");
+        System.out.println("📧 NEW EMAIL NOTIFICATION");
+        System.out.println("===============================================================");
+        System.out.println("To:      " + recipient);
+        System.out.println("Subject: " + request.getTitle());
+        System.out.println("Type:    " + request.getType());
+        System.out.println("---------------------------------------------------------------");
+        System.out.println(request.getMessage());
+        System.out.println("===============================================================");
+        System.out.println();
     }
 }

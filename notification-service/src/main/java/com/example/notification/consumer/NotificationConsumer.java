@@ -30,8 +30,10 @@ public class NotificationConsumer {
     private final UserServiceClient userServiceClient; // REST call is OK here
     private final ObjectMapper objectMapper;           // notification is not money-critical
 
+import com.example.common.event.UserCreatedEvent;
+
     @KafkaListener(
-        topics = KafkaTopics.PAYMENT_EVENTS, 
+        topics = {KafkaTopics.PAYMENT_EVENTS, KafkaTopics.USER_EVENTS}, 
         groupId = "notification-service",
         containerFactory = "kafkaListenerContainerFactory"
     )
