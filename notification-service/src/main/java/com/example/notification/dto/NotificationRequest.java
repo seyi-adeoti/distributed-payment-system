@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationRequest {
+    private String email;
     private UUID walletId;
     private UUID paymentId;
     private NotificationType type;
