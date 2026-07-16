@@ -12,6 +12,7 @@ import com.example.common.KafkaTopics;
 import com.example.common.event.PaymentCompletedEvent;
 import com.example.common.event.PaymentFailedEvent;
 import com.example.common.event.PaymentReversedEvent;
+import com.example.common.event.UserCreatedEvent;
 import com.example.notification.client.UserServiceClient;
 import com.example.notification.dto.NotificationRequest;
 import com.example.notification.dto.NotificationType;
@@ -30,8 +31,6 @@ public class NotificationConsumer {
     private final UserServiceClient userServiceClient; // REST call is OK here
     private final ObjectMapper objectMapper;           // notification is not money-critical
 
-import com.example.common.event.UserCreatedEvent;
-
     @KafkaListener(
         topics = {KafkaTopics.PAYMENT_EVENTS, KafkaTopics.USER_EVENTS}, 
         groupId = "notification-service",
@@ -42,6 +41,19 @@ import com.example.common.event.UserCreatedEvent;
 
         try {
             switch (eventType) {
+                case "UserCreated" -> {
+                    UserCreatedEvent event = deserialize(
+                        record.value(), UserCreatedEvent.class);
+                        
+                    notificationSender.send(NotificationRequest.builder()
+                        // Since we have the email, we might want to pass it through NotificationRequest. Let's see if we can.
+                        .walletId(event.getUserId()) // Using userId here just to have something unique, though it's not a wallet.
+                        .type(NotificationType.SECURITY_ALERT)
+                        .title("Welcome to Distributed Payment Platform!")
+                        .message(String.format("Hi %s, your account has been successfully created. Please upgrade your KYC to start transacting.", event.getFirstName()))
+                        .build());
+                }
+                
                 case "PaymentCompleted" -> {
                     PaymentCompletedEvent event = deserialize(
                         record.value(), PaymentCompletedEvent.class);
