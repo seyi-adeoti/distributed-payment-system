@@ -4,5 +4,6 @@ public enum NotificationType {
     DEBIT_ALERT,
     CREDIT_ALERT,
     TRANSFER_FAILED,
-    TRANSFER_REVERSED
+    TRANSFER_REVERSED,
+    SECURITY_ALERT
 }
