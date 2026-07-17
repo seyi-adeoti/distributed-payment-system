@@ -35,6 +35,12 @@
 
     <dependencies>
 
+        <!-- Eureka Client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
         <!-- Spring Cloud Gateway (reactive — requires webflux, NOT web) -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
