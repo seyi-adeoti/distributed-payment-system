@@ -2,6 +2,8 @@ server:
   port: ${SERVER_PORT:8083}
 
 spring:
+  application:
+    name: payment-service
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5435/payment_db}
     driver-class-name: org.postgresql.Driver
@@ -36,3 +38,8 @@ management:
     web:
       exposure:
         include: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
