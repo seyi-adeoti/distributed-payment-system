@@ -9,6 +9,8 @@ server:
   port: ${SERVER_PORT:8081}
 
 spring:
+  application:
+    name: user-service
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/user_db}
     driver-class-name: org.postgresql.Driver
