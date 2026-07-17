@@ -43,7 +43,6 @@ resilience4j.circuitbreaker:
       failureRateThreshold: 50
       waitDurationInOpenState: 10000
       permittedNumberOfCallsInHalfOpenState: 3
-      permittedNumberOfCallsInHalfOpenState: 3
 
 eureka:
   client:
