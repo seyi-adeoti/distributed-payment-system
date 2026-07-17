@@ -2,6 +2,8 @@ server:
   port: ${SERVER_PORT:8087}
 
 spring:
+  application:
+    name: notification-service
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://notification-db:5432/notification_db}
     driver-class-name: org.postgresql.Driver
@@ -41,3 +43,9 @@ resilience4j.circuitbreaker:
       failureRateThreshold: 50
       waitDurationInOpenState: 10000
       permittedNumberOfCallsInHalfOpenState: 3
+      permittedNumberOfCallsInHalfOpenState: 3
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
