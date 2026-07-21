@@ -5,7 +5,7 @@ spring:
   application:
     name: ledger-service
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://ledger-db:5432/ledger_db}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5436/ledger_db}
     driver-class-name: org.postgresql.Driver
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:password}
