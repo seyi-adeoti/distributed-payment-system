@@ -41,6 +41,13 @@
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
+        <!-- Swagger/OpenAPI for WebFlux -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
         <!-- Spring Cloud Gateway (reactive — requires webflux, NOT web) -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
